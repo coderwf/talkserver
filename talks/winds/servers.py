@@ -49,6 +49,7 @@ class TcpServer(object):
         if self._sock:
             self._sock.close()
             self._iolopper.remove_handler(self._sock)
+            self._iolopper.stop()
             self._sock  = None
 
 

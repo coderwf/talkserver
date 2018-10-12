@@ -4,6 +4,8 @@ import socket
 import errno
 #----------------------------------------
 import threading
+from evpoll import _epoll
+from ioloop import IoLoop
 class AccThread(threading.Thread):
     def __init__(self,sock):
         threading.Thread.__init__(self)
@@ -22,14 +24,18 @@ class AccThread(threading.Thread):
 class Client(object):
     def __init__(self):
         self.sock = None
+        poll      = _epoll()
+        self.iolooper  = IoLoop(poll)
 
+    """call when connect ok"""
+    def init(self,sock):
+        pass
     def connect(self,port,address):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.sock.setblocking(True)
         try:
             self.sock.connect((address, port))
-            msg = pf.wrap_msg(pf.SUPPORT_METHOD.ON_OPEN,"")
-            self.sock.send(msg)
+
         except Exception , e:
             print e
         AccThread(self.sock).start()
